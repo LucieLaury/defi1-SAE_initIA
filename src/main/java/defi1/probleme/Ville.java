@@ -1,25 +1,14 @@
 package defi1.probleme;
 
+import defi1.framework.common.State;
+import defi1.framework.recherche.Problem;
+
 import java.util.Objects;
 
-public class Ville {
-    private Coordonnees coordonnees;
-    private int population;
-
-
-
-
+public class Ville extends Problem {
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Ville ville = (Ville) o;
-        return population == ville.population && coordonnees.equals(ville.coordonnees);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(coordonnees, population);
+    public boolean isGoalState(State s) {
+        return false;
     }
 }

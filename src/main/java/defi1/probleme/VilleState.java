@@ -3,30 +3,39 @@ package defi1.probleme;
 import defi1.framework.common.State;
 import defi1.framework.recherche.HasHeuristic;
 
+import java.util.Arrays;
+
 public class VilleState extends State implements HasHeuristic {
 
-    private Ville ville;
+    private String nomVille;
+    private int x, y;
+    private int population;
     private Heuristique heuristique;
 
-    public VilleState(Ville ville, Heuristique heuristique){
-        this.ville = ville;
+    public VilleState(String nomVille, int x, int y, int population,  Heuristique heuristique){
+        this.nomVille = nomVille;
+        this.x = x;
+        this. y = y;
+        this.population = population;
         this.heuristique = heuristique;
     }
 
     @Override
     protected State cloneState() {
-        return new VilleState(ville, heuristique);
+        return new VilleState(nomVille ,x, y, population, heuristique);
     }
 
     @Override
     protected boolean equalsState(State o) {
         VilleState otherState = (VilleState) o;
-        return (otherState.ville.equals(ville));
+        return (otherState.nomVille.equals(nomVille) &&
+                (otherState.x == this.x)&&
+                (otherState.y == this.y));
     }
 
     @Override
     protected int hashState() {
-        return 0;
+        return Integer.hashCode(x) + Integer.hashCode(y) + nomVille.hashCode();
     }
 
     @Override
