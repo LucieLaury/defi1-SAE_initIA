@@ -40,4 +40,24 @@ public class VilleState extends State implements HasHeuristic {
     public double getHeuristic() {
         return this.dist_to_goal;
     }
+
+    public void setDist_to_goal(double dist_to_goal) {
+        this.dist_to_goal = dist_to_goal;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    public String getNomVille() {
+        return nomVille;
+    }
+
+    public void setPopulation(int population) {
+        this.population = population;
+    }
 }

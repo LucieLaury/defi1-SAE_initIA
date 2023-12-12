@@ -1,9 +1,14 @@
 package defi1.framework.common;
 
+import defi1.framework.RequeteAPI;
 import defi1.framework.recherche.SearchProblem;
 import defi1.framework.recherche.TreeSearch;
+import defi1.probleme.Ville;
+import defi1.probleme.VilleState;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Quelques méthodes rudimentaires pour lire la ligne de commande
@@ -102,22 +107,13 @@ public class ArgParse {
     /** 
      * Factory qui retourne une instance du problème choisie ou celui
      * par défaut
-     * @param prob Le nom du problème ou null 
+     *
      * @return Une instance du problème
      */
     
-    public static SearchProblem makeProblem(String prob){
-        if (prob==null)
-            prob = "vac";
-        switch (prob) {
-
-        default :
-            System.out.println("Problème inconnu");
-            usage();
-            System.exit(1); 
-        }
-
-        return null; // inatteignable, faire plaisir a javac
+    public static SearchProblem makeProblem() throws IOException {
+        List<VilleState> states = RequeteAPI.construireStates();
+        return new Ville(states);
     }
 
      /** 
@@ -160,26 +156,13 @@ public class ArgParse {
     /** 
      * Factory qui retourne une instance de l'état initial du problème
      * choisi
-     * @param prob Le nom du problème ou null 
+     * @param nomVilleInitiale le nom de la ville de l'état initial
      * @return  L'état initial qui peut être fixé ou généré
      * aléatoirement
      * 
      */
-    public static State makeInitialState(String prob){
-        if (prob==null)
-            prob = "vac";
-        switch (prob) {
-        /*case "dum":
-            return new DummyState();
-        case "map":
-            return RomaniaMap.ARAD;
-        case "vac":
-        default:
-            return new VacuumState();
-        case "puz":
-            return new EightPuzzleState();*/
-        }
-        return null;
+    public static State makeInitialState(String nomVilleInitiale) throws IOException {
+        return RequeteAPI.construireState_for_Ville(nomVilleInitiale);
     }
 }
 
