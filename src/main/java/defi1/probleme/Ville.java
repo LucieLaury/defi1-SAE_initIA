@@ -9,7 +9,11 @@ import java.util.Objects;
 public class Ville extends Problem {
 
     public Ville (List<State> states){
-
+        STATES = states.toArray(new State[0]);
+        for (State s : STATES){
+            System.out.println(s);
+        }
+        System.out.println(STATES.length);
     }
 
     @Override
