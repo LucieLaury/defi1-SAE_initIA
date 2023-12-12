@@ -10,8 +10,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         // créer un problem, un état intial et un  algo
-        Ville p = (Ville) ArgParse.makeProblem();
-        p.initGoalState(RequeteAPI.construireState_for_Ville("Besançon"));
+        Ville p = (Ville) ArgParse.makeProblem("Besançon", "distance");
         State s = ArgParse.makeInitialState("Lille");
         //TreeSearch algo = ArgParse.makeAlgo("bfs", p, s);
 

@@ -1,8 +1,11 @@
 package defi1.probleme;
 
+import defi1.framework.RequeteAPI;
+import defi1.framework.common.Action;
 import defi1.framework.common.State;
 import defi1.framework.recherche.Problem;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -10,8 +13,15 @@ public class Ville extends Problem {
 
     private VilleState goalState = null;
 
-    public Ville (List<VilleState> states){
-        STATES = states.toArray(new State[0]);
+    private String coutEvalue;
+
+    private List<Action> actions;
+
+    public Ville (List<VilleState> states,String goalState, String coutEvalue) throws IOException {
+        STATES = states;
+        this.coutEvalue = coutEvalue;
+        initGoalState(RequeteAPI.construireState_for_Ville(goalState));
+
     }
 
     public void initGoalState(VilleState goalState){
@@ -21,32 +31,56 @@ public class Ville extends Problem {
 
 
     private void calculDistanceWithGoatState(){
-        double rayonTerre = 6371;
         VilleState stateCourant;
-        for(int i = 0; i<STATES.length; i++){
-            stateCourant = (VilleState) STATES[i];
-            stateCourant.setDist_to_goal(rayonTerre * cCalcul(stateCourant.getLat(), stateCourant.getLng(),
-                    goalState.getLat(), goalState.getLng()));
+        double distanceCourante;
+        for(int i = 0; i<STATES.size(); i++){
+            stateCourant = STATES.get(i);
+            distanceCourante = stateCourant.calculdDitance(goalState);
+            stateCourant.setDist_to_goal(distanceCourante);
             //System.out.println("distance : " + stateCourant.getNomVille() + ". " + stateCourant.getHeuristic());
         }
     }
 
-    private double cCalcul(double latitude1, double longitude1, double latitude2, double longitude2){
-        return 2 * Math.atan2(Math.sqrt(aCalcul(latitude1, longitude1, latitude2, longitude2)),
-                Math.sqrt(1 - aCalcul(latitude1, longitude1, latitude2, longitude2)) );
-    }
 
-    private double aCalcul(double lat1, double lon1, double lat2, double lon2){
-        lat1 = Math.toRadians(lat1);
-        lon1 = Math.toRadians(lon1);
-        lat2 = Math.toRadians(lat2);
-        lon2 = Math.toRadians(lon2);
-        return Math.pow(Math.sin((lat1-lat2)/2), 2) + Math.cos(lat1) * Math.cos(lat2)
-                * Math.pow(Math.sin((lon1-lon2)/2), 2);
-    }
 
     @Override
     public boolean isGoalState(State s) {
         return goalState.equalsState(s);
+    }
+
+    public void initActionTransition(){
+        VilleState stateCourant;
+        String nomCourant;
+        for(int i = 0; i<STATES.size(); i++){
+           stateCourant = (VilleState) STATES.get(i);
+           nomCourant = stateCourant.getNomVille();
+           Action action = new Action("goto "+ nomCourant);
+            if(!actions.contains(action)){
+                actions.add(action);
+            }
+            for(int j= 0; j<STATES.size(); j++){
+                if(!STATES.get(j).equals(stateCourant)){
+                    TRANSITIONS.addTransition(STATES.get(j), action,
+                            stateCourant,  calculerCout(stateCourant, STATES.get(j)));
+                }
+            }
+
+        }
+    }
+
+    public double calculerCout(VilleState ville1, VilleState ville2){
+        if(coutEvalue.equals("distance")){
+            return ville1.calculdDitance(ville2);
+        } else {
+            double distance = ville1.calculdDitance(ville2);
+            double vitesse = 80;
+            if(STATES.subList(0,50).contains(ville1) && STATES.subList(0,50).contains(ville2)){
+                vitesse = 130;
+            } else if(STATES.contains(ville1)||STATES.contains(ville2)){
+                vitesse = 110;
+            }
+            System.out.println("vitesse : " + ville1.getNomVille() + "/"+ville2.getNomVille()+ " : " + vitesse);
+            return (distance/vitesse);
+        }
     }
 }

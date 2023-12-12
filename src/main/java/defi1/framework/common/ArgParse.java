@@ -111,9 +111,9 @@ public class ArgParse {
      * @return Une instance du problème
      */
     
-    public static SearchProblem makeProblem() throws IOException {
+    public static SearchProblem makeProblem(String goalState, String coutEvalue) throws IOException {
         List<VilleState> states = RequeteAPI.construireStates();
-        return new Ville(states);
+        return new Ville(states,goalState, coutEvalue);
     }
 
      /** 

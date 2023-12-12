@@ -6,6 +6,7 @@ import defi1.framework.common.Action;
 import defi1.framework.common.Misc;
 import defi1.framework.common.State;
 import defi1.framework.common.StateActionPair;
+import defi1.probleme.VilleState;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,7 +29,7 @@ public abstract class Problem extends SearchProblem {
      * La liste des états a remplir
      */
     
-    protected static State[] STATES = null ;
+    protected static List<VilleState> STATES = null ;
 
     /**
      * La liste des transition a remplir)
@@ -70,9 +71,9 @@ public abstract class Problem extends SearchProblem {
      */ 
     public void printStateGraph(){
         String res ="";
-        for(int i=0; i< STATES.length; i++){
-            res = res + STATES[i] + "{"
-                + Misc.collection2string(getActions(STATES[i]), ',')
+        for(int i=0; i< STATES.size(); i++){
+            res = res + STATES.get(i) + "{"
+                + Misc.collection2string(getActions(STATES.get(i)), ',')
                 + "}\n" ; 
         }
         
