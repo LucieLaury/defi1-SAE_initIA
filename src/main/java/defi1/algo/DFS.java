@@ -1,18 +1,16 @@
 package defi1.algo;
 
+
+
 import defi1.framework.common.Action;
 import defi1.framework.common.State;
-import defi1.framework.recherche.SearchNode;
-import defi1.framework.recherche.SearchProblem;
-import defi1.framework.recherche.TreeSearch;
+import defi1.framework.recherche.*;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
 
 public class DFS extends TreeSearch {
-    private List<SearchNode> vus;
-    private List<SearchNode> frontiere;
-    private final static int maxProfondeur = 40;
 
     /**
      * Crée un algorithme de recherche
@@ -22,38 +20,51 @@ public class DFS extends TreeSearch {
      */
     public DFS(SearchProblem p, State s) {
         super(p, s);
-        frontiere = new ArrayList<>();
-        vus = new ArrayList<>();
     }
 
     @Override
     public boolean solve() {
-        // On commence à létat initial
+
         SearchNode node = SearchNode.makeRootSearchNode(intial_state);
-        State state = node.getState();
-        frontiere.add(node);
-        while (!frontiere.isEmpty()){
-            SearchNode searchNodecourant = frontiere.get(0);
-            vus.add(searchNodecourant);
-            frontiere.remove(searchNodecourant);
-            ArrayList<Action> actions = problem.getActions(searchNodecourant.getState());
-            for(Action action : actions){
-                SearchNode sPrime = SearchNode.makeChildSearchNode(problem, searchNodecourant, action);
-                if(problem.isGoalState(sPrime.getState())){
-                    end_node=sPrime;
-                    return true;
-                } else {
-                    if(!vus.contains(sPrime)&&!frontiere.contains(sPrime)){
-                        frontiere.add(0, sPrime);
+
+        // Initialisation de la frontière et des vues
+        frontier = new ArrayList<>();
+        frontier.add(node);
+        explored = new HashSet<>();
+
+        //System.out.println(frontier);
+        //System.out.println(explored);
+
+        while( !frontier.isEmpty()) {
+
+            // Prendre le premier noeud et le supprimer (FIFO)
+            node = frontier.get(0);
+            frontier.remove(0);
+
+            State state = node.getState();
+
+            // Si le noeud contient un état brut
+            if (problem.isGoalState(state)) {
+                end_node = node;
+                frontier = new ArrayList<>(); // ????
+            } else {
+                explored.add(state);
+                ArrayList<SearchNode> temp = new ArrayList<>();
+                // Les actions possibles depuis cette état
+                ArrayList<Action> actions = problem.getActions(state);
+                for (Action a : actions) {
+                    SearchNode childNode = SearchNode.makeChildSearchNode(problem, node, a);
+                    if (!frontier.contains(childNode) && !explored.contains(childNode.getState())) {
+                        temp.add(childNode);
                     }
                 }
+                temp.addAll(frontier);
+                frontier = temp;
             }
 
         }
 
-
-
-        return false;
+        return true;
     }
 
 }

@@ -1,5 +1,7 @@
 package defi1.framework.common;
 
+
+import defi1.algo.*;
 import defi1.framework.RequeteAPI;
 import defi1.framework.recherche.SearchProblem;
 import defi1.framework.recherche.TreeSearch;
@@ -111,9 +113,9 @@ public class ArgParse {
      * @return Une instance du problème
      */
     
-    public static SearchProblem makeProblem(String goalState, String coutEvalue) throws IOException {
+    public static SearchProblem makeProblem(String initialState, String goalState, String coutEvalue) throws IOException {
         List<VilleState> states = RequeteAPI.construireStates();
-        return new Ville(states,goalState, coutEvalue);
+        return new Ville(states, initialState, goalState, coutEvalue);
     }
 
      /** 
@@ -130,19 +132,19 @@ public class ArgParse {
             algo = "rnd";
         switch (algo) {
         case "rnd":
-            //return new RandomSearch(p,s);
-
-         //Ce sera a vous de les faire :)
-       /*   case "bfs":
+            return new RandomSearch(p,s);
+        case "bfs":
             return new BFS(p,s);
         case "dfs":
-            return new DFS(p,s);*/
-        /*case "ucs":
+            return new DFS(p,s);
+        case "ucs":
             return new UCS(p,s);
         case "gfs":
             return new GFS(p,s);
         case "astar":
-        return new AStar(p,s);*/
+        return new AStar(p,s);
+            case "astar_yann":
+                return new AStar_Yann(p,s);
             
         default :
             System.out.println("Algorithme inconnu");
@@ -156,13 +158,13 @@ public class ArgParse {
     /** 
      * Factory qui retourne une instance de l'état initial du problème
      * choisi
-     * @param nomVilleInitiale le nom de la ville de l'état initial
+     * @param p le nom de la ville de l'état initial
      * @return  L'état initial qui peut être fixé ou généré
      * aléatoirement
      * 
      */
-    public static State makeInitialState(String nomVilleInitiale) throws IOException {
-        return RequeteAPI.construireState_for_Ville(nomVilleInitiale);
+    public static State makeInitialState(Ville p) throws IOException {
+        return p.getInitState();
     }
 }
 

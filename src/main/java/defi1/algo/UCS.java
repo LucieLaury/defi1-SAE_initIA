@@ -6,6 +6,8 @@ import defi1.framework.common.State;
 import defi1.framework.recherche.SearchNode;
 import defi1.framework.recherche.SearchProblem;
 import defi1.framework.recherche.TreeSearch;
+import defi1.probleme.Ville;
+import defi1.probleme.VilleState;
 
 import java.util.ArrayList;
 
@@ -63,7 +65,7 @@ public class UCS extends TreeSearch {
                     return true;
                 }
 
-                if (!explored.contains(son.getState()) && !frontiere.contains(son)){
+                if (!explored.contains(son.getState()) && !frontiere.contains(son) &&(son.getCost()< node.getHeuristic())){
                     int i = 0;
                     while(i < frontiere.size()) {
                         SearchNode n = frontiere.get(i);

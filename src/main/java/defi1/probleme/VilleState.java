@@ -8,19 +8,23 @@ public class VilleState extends State implements HasHeuristic {
     private String nomVille;
     private double lat, lng;
     private int population;
-    private double dist_to_goal = 0;
+    /*
+    heuristique : soit la distance entre cette VilleState et le goalState
+    soit le temps entre les deux villes
+     */
+    private double heuristique = 0;
 
-    public VilleState(String nomVille, double lat, double lng, int population,  double distance_to_goal){
+    public VilleState(String nomVille, double lat, double lng, int population,  double heuristique){
         this.nomVille = nomVille;
         this.lat = lat;
         this.lng = lng;
         this.population = population;
-        this.dist_to_goal = distance_to_goal;
+        this.heuristique = heuristique;
     }
 
     @Override
     protected State cloneState() {
-        return new VilleState(nomVille , lat, lng, population, dist_to_goal);
+        return new VilleState(nomVille , lat, lng, population, heuristique);
     }
 
     @Override
@@ -38,11 +42,11 @@ public class VilleState extends State implements HasHeuristic {
 
     @Override
     public double getHeuristic() {
-        return this.dist_to_goal;
+        return this.heuristique;
     }
 
-    public void setDist_to_goal(double dist_to_goal) {
-        this.dist_to_goal = dist_to_goal;
+    public void setHeuristique(double heuristique) {
+        this.heuristique = heuristique;
     }
 
     public double getLat() {
@@ -78,5 +82,10 @@ public class VilleState extends State implements HasHeuristic {
         lon2 = Math.toRadians(lon2);
         return Math.pow(Math.sin((lat1-lat2)/2), 2) + Math.cos(lat1) * Math.cos(lat2)
                 * Math.pow(Math.sin((lon1-lon2)/2), 2);
+    }
+
+    @Override
+    public String toString() {
+        return nomVille + "("+this.heuristique+")";
     }
 }

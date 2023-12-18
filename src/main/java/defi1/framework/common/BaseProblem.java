@@ -1,5 +1,6 @@
 package defi1.framework.common;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -15,7 +16,7 @@ public abstract class BaseProblem {
      *
      */
     
-    protected static Action[] ACTIONS = null;
+    protected static ArrayList<Action> ACTIONS = null;
        
 
     /**

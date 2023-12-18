@@ -180,8 +180,6 @@ public class RequeteAPI {
     public static VilleState construireState_for_Ville(String nomVille) throws IOException {
         JsonNode donneesVilleJson = requeteOneVille(nomVille);
         JsonNode coordinates = donneesVilleJson.get("features").get(0).get("geometry").get("coordinates");
-        //JsonNode coordinatesX = donneesVilleJson.get("features").get(0).get("properties").get("x");
-        //JsonNode coordinatesY = donneesVilleJson.get("features").get(0).get("properties").get("y");
         VilleState v = new VilleState(nomVille, coordinates.get(1).asDouble() ,
                 coordinates.get(0).asDouble(), 0, 0);
         return v;

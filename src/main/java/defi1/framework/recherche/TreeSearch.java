@@ -34,7 +34,7 @@ public abstract class TreeSearch {
     /*
      * La liste des noeuds a étendre 
      */
-    protected Queue<SearchNode> frontier = null;
+    protected ArrayList<SearchNode> frontier = new ArrayList<>();
 
     /*
      * La liste de noeuds déjà traités
