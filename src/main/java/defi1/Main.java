@@ -11,9 +11,9 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         // créer un problem, un état intial et un  algo
-        Ville p = (Ville) ArgParse.makeProblem("Hyères","Gravelines", "distance");
+        Ville p = (Ville) ArgParse.makeProblem("Hyères","Gravelines", "vitesse");
         State s = ArgParse.makeInitialState(p);
-        TreeSearch algo = ArgParse.makeAlgo("bfs", p, s);
+        TreeSearch algo = ArgParse.makeAlgo("astar", p, s);
 
         // resoudre
         long startTime = System.nanoTime();

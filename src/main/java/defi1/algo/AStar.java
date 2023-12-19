@@ -1,9 +1,9 @@
 package defi1.algo;
 
+
+
 import defi1.framework.common.Action;
-import defi1.framework.common.ArgParse;
 import defi1.framework.common.State;
-import defi1.framework.recherche.Problem;
 import defi1.framework.recherche.SearchNode;
 import defi1.framework.recherche.SearchProblem;
 import defi1.framework.recherche.TreeSearch;
@@ -11,10 +11,9 @@ import defi1.probleme.Ville;
 import defi1.probleme.VilleState;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class AStar extends TreeSearch {
-
-    private ArrayList<SearchNode> frontiere = new ArrayList<>();
 
     /**
      * Crée un algorithme de recherche
@@ -26,66 +25,54 @@ public class AStar extends TreeSearch {
         super(p, s);
     }
 
-    /**
-     * Lance la recherche pour résoudre le problème
-     * <p>A concrétiser pour chaque algorithme.</p>
-     * <p>La solution devra être stockée dans end_node.</p>
-     *
-     * @return Vrai si solution trouvé
-     */
     @Override
     public boolean solve() {
-        SearchNode currentNode = SearchNode.makeRootSearchNode(this.intial_state);
-        //Ajout du noeud initial dans la liste des noeuds à parcourir
-        frontiere.add(currentNode);
-        if(ArgParse.DEBUG) {
-            System.out.println("["+ currentNode.getState());
-        }
 
-        //Tant qu'il y a des noeuds à parcourir, on continue
-        while(!frontiere.isEmpty()) {
+        SearchNode node = SearchNode.makeRootSearchNode(intial_state);
 
-            //On récupère le premier élément à inspecter
-            //On le supprime de cette liste et on l'ajoute dans la liste d'élément à parcourir
-            currentNode = frontiere.get(0);
-            frontiere.remove(currentNode);
-            explored.add(currentNode.getState());
+        // Initialisation de la frontière et des vues
+        frontier = new ArrayList<>();
+        frontier.add(node);
+        explored = new HashSet<>();
 
-            //Pour le noeud courant, on créer ses noeuds fils à partir de chaque actions possibles
-            //Si le noeud fils crée n'est pas le but, on l'ajoute à la liste des noeuds à parcourir sinon, le problème est résolu
-            for (Action a : this.problem.getActions(currentNode.getState())) {
-                SearchNode childNode = SearchNode.makeChildSearchNode(this.problem, currentNode, a);
-                if(ArgParse.DEBUG) {
-                    System.out.println(" + " + a + "] -> [" + childNode.getState());
-                }
-                if(this.problem.isGoalState(childNode.getState())) {
-                    Action action = ((Ville) this.problem).createGoalAction((VilleState) childNode.getState());
+        while( !frontier.isEmpty()) {
 
-                    SearchNode goal = SearchNode.makeChildSearchNode(this.problem, childNode, action );
-                    this.end_node = goal;
-                    if (ArgParse.DEBUG) {
-                        System.out.println("]");
-                    }
-                    return true;
-                }
+            // Prendre le noeud le moins coûteux (ici le premier car le tableau est trié)
+            node = frontier.get(0);
+            frontier.remove(0);
 
-                if (!explored.contains(childNode.getState()) && !frontiere.contains(childNode)){
-                    int i = 0;
-                    while(i < frontiere.size()) {
-                        SearchNode n = frontiere.get(i);
-                        if(n.getCost() + n.getHeuristic() > childNode.getCost() + childNode.getHeuristic()) {
-                            frontiere.add(i, childNode);
-                            break;
+            State state = node.getState();
+
+            // Si le noeud contient un état brut
+            if (problem.isGoalState(state)) {
+                Action action = ((Ville) this.problem).createGoalAction((VilleState) state);
+                SearchNode goal = SearchNode.makeChildSearchNode(this.problem, node, action );
+                this.end_node = goal;
+                frontier = new ArrayList<>(); // ????
+                return true;
+            } else {
+                explored.add(state);
+                // Les actions possibles depuis cette état
+                ArrayList<Action> actions = problem.getActions(state);
+                for (Action a : actions) {
+                    SearchNode childNode = SearchNode.makeChildSearchNode(problem, node, a);
+                    // Si pas dans frontier et explored
+                    if (frontier.contains(childNode)) {
+                        SearchNode oldNoeud = frontier.get(frontier.indexOf(childNode));
+                        if (oldNoeud.getHeuristic()+ oldNoeud.getCost() > childNode.getHeuristic()+childNode.getCost() ) {
+                            frontier.set(frontier.indexOf(childNode), childNode);
                         }
-                        i++;
                     }
-                    if(i == frontiere.size()) {
-                        frontiere.add(childNode);
+                    if (!frontier.contains(childNode) && !explored.contains(childNode.getState())&&(childNode.getCost()< node.getHeuristic())) {
+                        frontier.add(childNode);
                     }
+                    // Si dans frontier, vérifier le coût des deux noeuds et garder le moins coûteux
                 }
+
             }
+
         }
-        System.out.println("Aucune solution trouvée");
+
         return false;
     }
 }
