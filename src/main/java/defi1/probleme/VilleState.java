@@ -67,21 +67,20 @@ public class VilleState extends State implements HasHeuristic {
 
     public double calculdDitance(VilleState ville){
         double rayonTerre = 6371;
-        return (rayonTerre * cCalcul(this.getLat(), this.getLng(),
-                ville.getLat(), ville.getLng()));
-    }
-    private double cCalcul(double latitude1, double longitude1, double latitude2, double longitude2){
-        return 2 * Math.atan2(Math.sqrt(aCalcul(latitude1, longitude1, latitude2, longitude2)),
-                Math.sqrt(1 - aCalcul(latitude1, longitude1, latitude2, longitude2)) );
-    }
+        double lat1 = Math.toRadians(this.lat);
+        double lon1 = Math.toRadians(this.lng);
+        double lat2 = Math.toRadians(ville.lat);
+        double lon2 = Math.toRadians(ville.lng);
+        double deltaLat = lat2-lat1;
+        double deltaLng = lon2-lon1;
 
-    private double aCalcul(double lat1, double lon1, double lat2, double lon2){
-        lat1 = Math.toRadians(lat1);
-        lon1 = Math.toRadians(lon1);
-        lat2 = Math.toRadians(lat2);
-        lon2 = Math.toRadians(lon2);
-        return Math.pow(Math.sin((lat1-lat2)/2), 2) + Math.cos(lat1) * Math.cos(lat2)
-                * Math.pow(Math.sin((lon1-lon2)/2), 2);
+        double a = Math.pow(Math.sin(deltaLat/2), 2) +
+                Math.cos(lat1) * Math.cos(lat2) *
+                        Math.pow(Math.sin(deltaLng/2), 2);
+
+        double c = 2 *Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+        return rayonTerre*c;
     }
 
     @Override
