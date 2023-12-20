@@ -106,20 +106,20 @@ public class Ville extends Problem {
     }
 
     public double calculerCout(VilleState ville1, VilleState ville2){
+        double distance = ville1.calculdDitance(ville2);
         if(coutEvalue.equals("distance")){
-            return ville1.calculdDitance(ville2);
+            return distance;
         } else {
-            double distance = ville1.calculdDitance(ville2);
             double vitesse;
             if(STATES.subList(0,50).contains(ville1) && STATES.subList(0,50).contains(ville2)){
                 vitesse = 130;
-            } else if(STATES.subList(51,100).contains(ville1)&&STATES.subList(51,100).contains(ville2)){
+            } else if(STATES.subList(0,100).contains(ville1)&&STATES.subList(0,100).contains(ville2)){
                 vitesse = 110;
             } else {
                 vitesse =80;
             }
             double temps = distance/vitesse;
-            System.out.println("temps : " + ville1.getNomVille() + "/"+ville2.getNomVille()+ " : " + temps);
+            System.out.println("vitesse : " + ville1.getNomVille() + "/"+ville2.getNomVille()+ " : " + vitesse);
 
             return temps;
         }

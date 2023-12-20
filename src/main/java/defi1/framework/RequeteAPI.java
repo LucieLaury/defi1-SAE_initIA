@@ -124,8 +124,8 @@ public class RequeteAPI {
      */
     public static JsonNode requeteOneVille(String nom) throws IOException {
         nom = normaliserNom(nom);
-        URL url = new URL(URL_API_ADRESS + nom);
-        //System.out.println("url : " + url.toString());
+        URL url = new URL(URL_API_ADRESS + nom +"&type=municipality");
+        System.out.println("url : " + url.toString());
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         con.connect();
